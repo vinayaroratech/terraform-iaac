@@ -1,59 +1,43 @@
-provider "random" {}
-
-resource "random_id" "name" {
-  byte_length = 8
+# sPECIFy the provider and access details
+provider "aws" {
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region     = var.aws_region
 }
 
-resource "azurerm_resource_group" "psql-rg" {
-  name     = "land-dev-psql-rg"
-  location = var.psql-location
+## Network
+# Create VPC
+module "vpc" {
+  source     = "./network/vpc"
+  cidr_block = var.cidr_block
 }
 
-resource "azurerm_storage_account" "psql-sa" {
-  name                     = "landsa${random_id.name.hex}"
-  resource_group_name      = azurerm_resource_group.psql-rg.name
-  location                 = azurerm_resource_group.psql-rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+# Create Subnets
+module "subnets" {
+  source         = "./network/subnets"
+  vpc_id         = module.vpc.vpc_id
+  vpc_cidr_block = module.vpc.vpc_cidr_block
 }
 
-
-resource "azurerm_postgresql_server" "psql-server" {
-  name                = "land-dev-psql-server"
-  location            = azurerm_resource_group.psql-rg.location
-  resource_group_name = azurerm_resource_group.psql-rg.name
-
-  administrator_login          = var.psql-admin-login
-  administrator_login_password = var.psql-admin-password
-
-  sku_name = var.psql-sku-name
-  version  = var.psql-version
-
-  storage_mb        = var.psql-storage
-  auto_grow_enabled = true
-
-  # backup_retention_days            = 7
-  geo_redundant_backup_enabled     = false
-  public_network_access_enabled    = true
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2"
+module "sec_group_rds" {
+  source         = "./network/sec_group"
+  vpc_id         = module.vpc.vpc_id
+  vpc_cidr_block = module.vpc.vpc_cidr_block
 }
 
+module "rds" {
+  source = "./rds"
 
-resource "azurerm_postgresql_database" "psql-db" {
-  name                = var.db-name
-  resource_group_name = azurerm_resource_group.psql-rg.name
-  server_name         = azurerm_postgresql_server.psql-server.name
-  charset             = "utf8"
-  collation           = "English_United States.1252"
+  subnets = module.subnets.subnets
+
+
+  sec_grp_rds       = module.sec_group_rds.sec_grp_rds
+  identifier        = var.identifier
+  storage_type      = var.storage_type
+  allocated_storage = var.allocated_storage
+  db_engine         = var.db_engine
+  engine_version    = var.engine_version
+  instance_class    = var.instance_class
+  db_username       = var.db_username
+  db_password       = var.db_password
 }
-
-
-resource "azurerm_postgresql_firewall_rule" "psql-fw-rule" {
-  name                = "psql-Home-Access"
-  resource_group_name = azurerm_resource_group.psql-rg.name
-  server_name         = azurerm_postgresql_server.psql-server.name
-  start_ip_address    = "103.101.103.0"
-  end_ip_address      = "103.101.103.160"
-}
-

@@ -1,25 +1,75 @@
-output "postgresql_server" {
-  value     = azurerm_postgresql_server.psql-server
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "vpc_cidr_block" {
+  value = module.vpc.vpc_cidr_block
+}
+
+output "gw_id" {
+  value = module.vpc.gw_id
+}
+
+output "main_route_table_id" {
+  value = module.vpc.main_route_table_id
+}
+
+output "vpc_dhcp_id" {
+  value = module.vpc.vpc_dhcp_id
+}
+output "sec_grp_rds" {
+  value = module.sec_group_rds.sec_grp_rds
+}
+
+output "db_subnet_group_id" {
+  value = module.rds.db_subnet_group_id
+}
+
+output "db_subnet_group_arn" {
+  value = module.rds.db_subnet_group_arn
+}
+
+output "db_instance_address" {
+  value = module.rds.db_instance_address
+}
+
+output "db_instance_arn" {
+  value = module.rds.db_instance_arn
+}
+
+output "db_instance_availability_zone" {
+  value = module.rds.db_instance_availability_zone
+}
+
+output "db_instance_endpoint" {
+  value = module.rds.db_instance_endpoint
+}
+
+output "db_instance_id" {
+  value = module.rds.db_instance_id
+}
+
+output "db_instance_resource_id" {
+  value = module.rds.db_instance_resource_id
+}
+
+output "db_instance_status" {
+  value = module.rds.db_instance_status
+}
+
+output "db_instance_name" {
+  value = module.rds.db_instance_name
+}
+
+output "db_instance_username" {
+  value = module.rds.db_instance_username
+}
+
+output "db_instance_password" {
+  value     = module.rds.db_instance_password
   sensitive = true
 }
 
-output "server_name" {
-  description = "The name of the PostgreSQL server"
-  value       = azurerm_postgresql_server.psql-server.name
-}
-
-output "server_fqdn" {
-  description = "The fully qualified domain name (FQDN) of the PostgreSQL server"
-  value       = azurerm_postgresql_server.psql-server.fqdn
-}
-
-output "administrator_login" {
-  description = "Admin username"
-  value       = var.psql-admin-login
-}
-
-output "administrator_password" {
-  description = "Password for admin user"
-  value       = var.psql-admin-password
-  sensitive   = true
+output "db_instance_port" {
+  value = module.rds.db_instance_port
 }

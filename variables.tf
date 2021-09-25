@@ -1,74 +1,68 @@
-variable "company" {
-  type        = string
-  description = "Company Name"
+variable "access_key" {
+  description = "AWS ACCEE_KEY"
 }
 
-variable "prefix" {
-  type        = string
-  description = "Prefix Name"
+variable "secret_key" {
+  description = "AWS SECRETE_KEY"
 }
 
-variable "environment" {
-  type        = string
-  description = "PostgreSQL Server Environment"
+variable "aws_region" {
+  description = "AWS region to launch servers."
+  default     = "us-east-1"
 }
 
-variable "db-name" {
-  type        = string
-  description = "PostgreSQL Database Name"
-  default     = "landdb"
+variable "cidr_block" {
+  description = "CIDR for the whole VPC"
+
+  default = {
+    prod = "10.10.0.0/16"
+    dev  = "10.20.0.0/16"
+  }
 }
 
-variable "psql-location" {
-  type        = string
-  description = "PostgreSQL DB Location"
+variable "identifier" {
+  description = "Identifier for DB"
+  default     = "landcheck-db"
 }
 
-variable "owner" {
-  type        = string
-  description = "Name of the Owner"
+variable "storage_type" {
+  description = "Type of the storage ssd or magnetic"
+  default     = "gp2"
 }
 
-variable "azure-subscription-id" {
-  type        = string
-  description = "Azure Subscription Id"
+variable "allocated_storage" {
+  description = "ammount of storage allocated in GB"
+
+  default = {
+    prod = "100"
+    dev  = "10"
+  }
 }
 
-variable "azure-client-id" {
-  type        = string
-  description = "AD Client Id"
+variable "db_engine" {
+  description = " DB engine"
+  default     = "postgres"
 }
 
-variable "azure-client-secret" {
-  type        = string
-  description = "AD Client Secret"
-}
-
-variable "azure-tenant-id" {
-  type        = string
-  description = "Azure Tenant Id"
-}
-
-variable "psql-admin-login" {
-  type        = string
-  description = "Login to authenticate to PostgreSQL Server"
-}
-variable "psql-admin-password" {
-  type        = string
-  description = "Password to authenticate to PostgreSQL Server"
-}
-variable "psql-version" {
-  type        = string
-  description = "PostgreSQL Server version to deploy"
+variable "engine_version" {
+  description = "DB engine version"
   default     = "11"
 }
-variable "psql-sku-name" {
-  type        = string
-  description = "PostgreSQL SKU Name"
-  default     = "B_Gen5_1"
+
+variable "instance_class" {
+  description = "mashine type to be used"
+
+  default = {
+    prod = "db.t2.large"
+    dev  = "db.t2.micro"
+  }
 }
-variable "psql-storage" {
-  type        = string
-  description = "PostgreSQL Storage in MB"
-  default     = "5120"
+
+variable "db_username" {
+  description = "db admin user"
+  default     = "root"
+}
+
+variable "db_password" {
+  description = "password, provide through your tfvars file"
 }
