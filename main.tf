@@ -19,6 +19,15 @@ module "subnets" {
   vpc_cidr_block = module.vpc.vpc_cidr_block
 }
 
+# Configure Routes
+module "route" {
+  source              = "./network/route"
+  main_route_table_id = module.vpc.main_route_table_id
+  gw_id               = module.vpc.gw_id
+
+  subnets = module.subnets.subnets
+}
+
 module "sec_group_rds" {
   source         = "./network/sec_group"
   vpc_id         = module.vpc.vpc_id
@@ -29,7 +38,6 @@ module "rds" {
   source = "./rds"
 
   subnets = module.subnets.subnets
-
 
   sec_grp_rds       = module.sec_group_rds.sec_grp_rds
   identifier        = var.identifier

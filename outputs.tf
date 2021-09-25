@@ -17,6 +17,15 @@ output "main_route_table_id" {
 output "vpc_dhcp_id" {
   value = module.vpc.vpc_dhcp_id
 }
+
+output "subnets" {
+  value = module.subnets.subnets
+}
+
+output "route_id" {
+  value = module.route.route_id
+}
+
 output "sec_grp_rds" {
   value = module.sec_group_rds.sec_grp_rds
 }
@@ -66,7 +75,7 @@ output "db_instance_username" {
 }
 
 output "db_instance_password" {
-  value     = module.rds.db_instance_password
+  value = module.rds.db_instance_password
   sensitive = true
 }
 

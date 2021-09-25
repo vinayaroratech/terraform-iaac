@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {}
 resource "aws_db_subnet_group" "db_sub_gr" {
   description = "terrafom db subnet group"
   name        = "main_subnet_group"
-  subnet_ids  = var.subnets[0]
+  subnet_ids  = var.subnets
 
   #  subnet_ids = [
   #    "${var.api_dev_int_subnet_ids}"]
@@ -19,7 +19,7 @@ resource "aws_db_instance" "db" {
   engine            = var.db_engine
   engine_version    = var.engine_version
   instance_class    = var.instance_class[terraform.workspace]
-  name              = terraform.workspace
+  name              = "${var.identifier}-${terraform.workspace}"
   username          = var.db_username
   password          = var.db_password
 

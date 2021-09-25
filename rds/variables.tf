@@ -1,4 +1,6 @@
-variable "subnets" {}
+variable "subnets" {
+  type = list(string)
+}
 
 variable "identifier" {}
 
