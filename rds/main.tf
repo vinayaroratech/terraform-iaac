@@ -19,7 +19,7 @@ resource "aws_db_instance" "db" {
   engine            = var.db_engine
   engine_version    = var.engine_version
   instance_class    = var.instance_class[terraform.workspace]
-  name              = "${var.identifier}-${terraform.workspace}"
+  name              = var.db_name
   username          = var.db_username
   password          = var.db_password
 

@@ -58,6 +58,11 @@ variable "instance_class" {
   }
 }
 
+variable "db_name" {
+  description = "Database name"
+  default     = "LandCheckDevDB"
+}
+
 variable "db_username" {
   description = "db admin user"
   default     = "root"

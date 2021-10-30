@@ -18,6 +18,7 @@ variable "instance_class" {
   type = map(string)
 }
 
+variable "db_name" {}
 variable "db_username" {}
 
 variable "db_password" {}

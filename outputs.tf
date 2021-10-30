@@ -75,7 +75,7 @@ output "db_instance_username" {
 }
 
 output "db_instance_password" {
-  value = module.rds.db_instance_password
+  value     = module.rds.db_instance_password
   sensitive = true
 }
 
