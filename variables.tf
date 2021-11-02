@@ -71,3 +71,8 @@ variable "db_username" {
 variable "db_password" {
   description = "password, provide through your tfvars file"
 }
+
+variable "bucket_name" {
+  description = "bucket name is unique in the region."
+  default     = "landcheck-reports"
+}

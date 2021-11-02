@@ -50,3 +50,9 @@ module "rds" {
   db_username       = var.db_username
   db_password       = var.db_password
 }
+
+module "s3" {
+    source = "./s3"
+    #bucket name should be unique
+    bucket_name = var.bucket_name       
+}
