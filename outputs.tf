@@ -82,3 +82,7 @@ output "db_instance_password" {
 output "db_instance_port" {
   value = module.rds.db_instance_port
 }
+
+output "sqs_queue_arn" {
+  value = module.report_lambda.sqs_queue_arn
+}

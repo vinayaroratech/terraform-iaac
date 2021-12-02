@@ -52,15 +52,20 @@ module "rds" {
 }
 
 module "s3" {
-    source = "./s3"
-    #bucket name should be unique
-    bucket_name = var.bucket_name
-    sqs_bucket_name = var.sqs_bucket_name
+  source = "./s3"
+  #bucket name should be unique
+  bucket_name     = var.bucket_name
+  sqs_bucket_name = var.sqs_bucket_name
 }
 
 module "sqs" {
-    source = "./sqs"
-    queue_name = var.queue_name
-    sqs_bucket_id = module.s3.sqs_bucket_id
-    sqs_bucket_arn = module.s3.sqs_bucket_arn
+  source         = "./sqs"
+  queue_name     = var.queue_name
+  sqs_bucket_id  = module.s3.sqs_bucket_id
+  sqs_bucket_arn = module.s3.sqs_bucket_arn
+}
+
+module "report_lambda" {
+  source     = "./lambda"
+  aws_region = var.aws_region
 }

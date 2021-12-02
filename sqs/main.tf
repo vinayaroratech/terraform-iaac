@@ -1,5 +1,5 @@
 resource "aws_sqs_queue" "sqs_queue" {
-  name = "${var.queue_name}"
+  name                      = var.queue_name
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
@@ -28,10 +28,10 @@ POLICY
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = "${var.sqs_bucket_id}" 
+  bucket = var.sqs_bucket_id
 
   queue {
-    queue_arn     = aws_sqs_queue.sqs_queue.arn
-    events        = ["s3:ObjectCreated:*"]
+    queue_arn = aws_sqs_queue.sqs_queue.arn
+    events    = ["s3:ObjectCreated:*"]
   }
 }
