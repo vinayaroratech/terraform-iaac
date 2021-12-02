@@ -76,3 +76,13 @@ variable "bucket_name" {
   description = "bucket name is unique in the region."
   default     = "landcheck-reports"
 }
+
+variable "queue_name" {
+  description = "sqs queue name."
+  default     = "landcheck-payment-success-event-queue"
+}
+
+variable "sqs_bucket_name" {
+  description = "bucket name is unique in the region."
+  default     = "landcheck-sqs"
+}
