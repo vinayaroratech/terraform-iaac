@@ -86,3 +86,23 @@ variable "sqs_bucket_name" {
   description = "bucket name is unique in the region."
   default     = "landcheck-sqs"
 }
+
+variable "connection_string_ssm" {
+  description = "connection string to connect database."
+}
+
+variable "send_grid_api_key_ssm" {
+  description = "send grid api key to send email."
+}
+
+variable "auth0_client_id" {
+  description = "auth0 client id"
+}
+
+variable "auth0_client_secret" {
+  description = "auth0 client secret"
+}
+
+variable "jwt_audience" {
+  description = "jwt audience"
+}

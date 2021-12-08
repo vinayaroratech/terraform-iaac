@@ -69,3 +69,45 @@ module "report_lambda" {
   source     = "./lambda"
   aws_region = var.aws_region
 }
+
+module "connection_string_ssm" {
+  source    = "./ssm"
+  ssm_name  = "/LandCheck/ConnectionStringSSM"
+  ssm_value = var.connection_string_ssm
+}
+
+module "send_grid_api_key_ssm" {
+  source    = "./ssm"
+  ssm_name  = "/ContentAPI/SendGridApiKeySSM"
+  ssm_value = var.send_grid_api_key_ssm
+}
+
+module "auth0_client_id" {
+  source    = "./ssm"
+  ssm_name  = "/Auth0/ClientId"
+  ssm_value = var.auth0_client_id
+}
+
+module "auth0_client_secret" {
+  source    = "./ssm"
+  ssm_name  = "/Auth0/ClientSecret"
+  ssm_value = var.auth0_client_secret
+}
+
+module "jwt_audience" {
+  source    = "./ssm"
+  ssm_name  = "/Jwt/Audience"
+  ssm_value = var.jwt_audience
+}
+
+module "aws_access_Id" {
+  source    = "./ssm"
+  ssm_name  = "/Aws/AccessId"
+  ssm_value = var.access_key
+}
+
+module "aws_secret_key" {
+  source    = "./ssm"
+  ssm_name  = "/Aws/SecretKey"
+  ssm_value = var.secret_key
+}

@@ -6,7 +6,7 @@ resource "aws_sqs_queue" "sqs_queue" {
   receive_wait_time_seconds = 10
 
   tags = {
-    Name = terraform.workspace
+    environment = terraform.workspace
   }
   policy = <<POLICY
 {
