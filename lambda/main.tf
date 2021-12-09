@@ -107,8 +107,8 @@ resource "aws_lambda_function" "report_lambda" {
     Name = terraform.workspace
   }
 
-  timeout     = 30
-  memory_size = 128
+  timeout     = 900
+  memory_size = 256
 }
 
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
