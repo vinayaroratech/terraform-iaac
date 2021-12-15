@@ -5,7 +5,7 @@ resource "random_password" "password" {
 }
 
 resource "aws_secretsmanager_secret" "secret" {
-  name        = var.secret_name
+  name        = "${terraform.workspace}-${var.secret_name}"
   description = var.description
   tags = {
     environment = terraform.workspace
