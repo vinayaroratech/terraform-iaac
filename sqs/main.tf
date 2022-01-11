@@ -1,37 +1,73 @@
-resource "aws_sqs_queue" "sqs_queue" {
-  name                      = var.queue_name
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
+##
+## A module to create an SQS queue, along with its dead-letter queue and access policies
+##
+
+resource "aws_sqs_queue" "base_queue" {
+  name                       = var.queue_name
+  message_retention_seconds  = var.retention_period
+  visibility_timeout_seconds = var.visibility_timeout
+  redrive_policy = jsonencode({
+    "deadLetterTargetArn" = aws_sqs_queue.deadletter_queue.arn,
+    "maxReceiveCount"     = var.receive_count
+  })
 
   tags = {
     environment = terraform.workspace
   }
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Id": "sqspolicy",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "sqs:SendMessage",
-      "Resource": "arn:aws:sqs:*:*:${var.queue_name}",
-      "Condition": {
-        "ArnEquals": { "aws:SourceArn": "${var.sqs_bucket_arn}" }
-      }
-    }
-  ]
-}
-POLICY
 }
 
-resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = var.sqs_bucket_id
+resource "aws_sqs_queue" "deadletter_queue" {
+  name                       = "${var.queue_name}-DLQ"
+  message_retention_seconds  = var.retention_period
+  visibility_timeout_seconds = var.visibility_timeout
+}
 
-  queue {
-    queue_arn = aws_sqs_queue.sqs_queue.arn
-    events    = ["s3:ObjectCreated:*"]
+
+##
+## Managed policies that allow access to the queue
+##
+
+resource "aws_iam_policy" "consumer_policy" {
+  name        = "SQS-${var.queue_name}-${var.aws_region}-consumer_policy"
+  description = "Attach this policy to consumers of ${var.queue_name} SQS queue"
+  policy      = data.aws_iam_policy_document.consumer_policy.json
+}
+
+data "aws_iam_policy_document" "consumer_policy" {
+  statement {
+    actions = [
+      "sqs:ChangeMessageVisibility",
+      "sqs:ChangeMessageVisibilityBatch",
+      "sqs:DeleteMessage",
+      "sqs:DeleteMessageBatch",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ReceiveMessage"
+    ]
+    resources = [
+      aws_sqs_queue.base_queue.arn,
+      aws_sqs_queue.deadletter_queue.arn
+    ]
+  }
+}
+
+
+resource "aws_iam_policy" "producer_policy" {
+  name        = "SQS-${var.queue_name}-${var.aws_region}-producer"
+  description = "Attach this policy to producers for ${var.queue_name} SQS queue"
+  policy      = data.aws_iam_policy_document.producer_policy.json
+}
+
+data "aws_iam_policy_document" "producer_policy" {
+  statement {
+    actions = [
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:SendMessage",
+      "sqs:SendMessageBatch"
+    ]
+    resources = [
+      aws_sqs_queue.base_queue.arn
+    ]
   }
 }

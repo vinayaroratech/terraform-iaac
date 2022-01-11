@@ -17,3 +17,8 @@ variable "function_name" {
 variable "handler" {
   default = "Report.Lambda::Report.Lambda.GenerateReportHandler::FunctionHandler"
 }
+
+variable "queue_arn" {
+  description = "The arn of base queue"
+  type        = string
+}

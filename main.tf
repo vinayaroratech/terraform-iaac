@@ -3,6 +3,7 @@ provider "aws" {
   access_key = var.access_key
   secret_key = var.secret_key
   region     = var.aws_region
+  profile    = "peritos"
 }
 
 ## Network
@@ -58,16 +59,18 @@ module "s3" {
   sqs_bucket_name = var.sqs_bucket_name
 }
 
-module "sqs" {
-  source         = "./sqs"
-  queue_name     = var.queue_name
-  sqs_bucket_id  = module.s3.sqs_bucket_id
-  sqs_bucket_arn = module.s3.sqs_bucket_arn
+module "reports_queue" {
+  source             = "./sqs"
+  queue_name         = var.queue_name
+  visibility_timeout = 901
+  receive_count      = 1
+  aws_region         = var.aws_region
 }
 
 module "report_lambda" {
   source     = "./lambda"
   aws_region = var.aws_region
+  queue_arn  = module.reports_queue.base_queue_arn
 }
 
 module "app-secrets" {

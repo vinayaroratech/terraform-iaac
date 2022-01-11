@@ -76,18 +76,6 @@ data "aws_iam_policy_document" "report_lambda" {
   }
 }
 
-resource "aws_sqs_queue" "report_lambda" {
-  name                      = "${var.function_name}_queue"
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
-
-  tags = {
-    Name = terraform.workspace
-  }
-}
-
 data "archive_file" "report_lambda_zip" {
   type        = "zip"
   source_dir  = "${path.module}/publish"
@@ -108,12 +96,12 @@ resource "aws_lambda_function" "report_lambda" {
   }
 
   timeout     = 900
-  memory_size = 256
+  memory_size = 512
 }
 
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   batch_size       = 1
-  event_source_arn = aws_sqs_queue.report_lambda.arn
+  event_source_arn = var.queue_arn
   enabled          = true
   function_name    = aws_lambda_function.report_lambda.arn
 }
