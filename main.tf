@@ -1,4 +1,6 @@
-# sPECIFy the provider and access details
+# Specify the provider and access details
+data "aws_caller_identity" "current" {}
+
 provider "aws" {
   access_key = var.access_key
   secret_key = var.secret_key
@@ -9,8 +11,9 @@ provider "aws" {
 ## Network
 # Create VPC
 module "vpc" {
-  source     = "./network/vpc"
-  cidr_block = var.cidr_block
+  source      = "./network/vpc"
+  cidr_block  = var.cidr_block
+  common_tags = local.common_tags
 }
 
 # Create Subnets
@@ -76,4 +79,24 @@ module "report_lambda" {
 module "app-secrets" {
   source  = "./secret"
   secrets = var.secrets
+}
+
+
+module "report_app_ecr" {
+  source      = "./ecr"
+  name        = "${local.owners}_report_app"
+  common_tags = local.common_tags
+}
+
+module "report_app_ecs" {
+  source      = "./ecs"
+  account_id  = data.aws_caller_identity.current.account_id
+  name        = "${local.name}_report_app"
+  repo_name   = "${local.owners}_report_app"
+  common_tags = local.common_tags
+  aws_region  = var.aws_region
+  vpc_id      = module.vpc.vpc_id
+  subnets     = module.subnets.subnets
+  application = local.owners
+  environment = local.environment
 }

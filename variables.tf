@@ -1,3 +1,9 @@
+variable "project" {
+  description = "The project to use for unique resource naming"
+  default     = "landcheck"
+  type        = string
+}
+
 variable "access_key" {
   description = "AWS ACCEE_KEY"
 }

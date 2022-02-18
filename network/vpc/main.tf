@@ -9,9 +9,7 @@ resource "aws_vpc" "vpc_id" {
     create_before_destroy = true
   }
 
-  tags = {
-    "Name" = "terraform-landcheck-${terraform.workspace}"
-  }
+  tags = var.common_tags
 }
 
 # Create an internet gateway to give our subnet access to the outside world

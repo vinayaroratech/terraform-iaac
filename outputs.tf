@@ -86,3 +86,12 @@ output "db_instance_port" {
 output "base_queue_url" {
   value = module.reports_queue.base_queue_url
 }
+
+output "report_app_ecr" {
+  value = module.report_app_ecr.ecr
+}
+
+## Outputs ##
+output "report_app_ecs" {
+  value = module.report_app_ecs.ecs_cluster
+}
