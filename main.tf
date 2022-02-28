@@ -100,3 +100,12 @@ module "report_app_ecs" {
   application = local.owners
   environment = local.environment
 }
+
+
+module "report-id-parms" {
+  source      = "./ssm"
+  ssm_name    = "/ReportLambda/ReportId"
+  description = "Paramter used to pass information from lambda to ecs service"
+  ssm_type    = "String"
+  ssm_value   = "10"
+}

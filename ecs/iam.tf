@@ -36,6 +36,9 @@ data "aws_iam_policy_document" "policy" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:GetDownloadUrlForLayer",
       "ecr:BatchGetImage",
+
+      "ssm:GetParameter",
+      "ssm:PutParameter",
     ]
 
     resources = ["*"]
